@@ -1,13 +1,14 @@
-import { type Config } from "prettier";
-
-const config: Config = {
+/**
+ * @see https://prettier.io/docs/configuration
+ * @type {import("prettier").Config}
+ */
+const config = {
   semi: true,
   useTabs: false,
   tabWidth: 2,
   trailingComma: "all",
   printWidth: 80,
-  singleQuote: true,
-  jsxSingleQuote: true,
+  singleQuote: false,
   htmlWhitespaceSensitivity: "css",
   endOfLine: "lf",
   bracketSpacing: true,
