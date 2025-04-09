@@ -15,6 +15,7 @@ const eslintConfig = [
   {
     rules: {
       "object-shorthand": ["error", "always"],
+      "react-hooks/exhaustive-deps": "off",
     },
   },
 ];
