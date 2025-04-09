@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Toaster } from "@/shared/components";
+import { OverrideConsole } from "@/shared/lib";
 
 import "../styles";
 
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body>
         {children}
         <Toaster position="top-center" richColors />
+        {process.env.NODE_ENV === "development" && <OverrideConsole />}
       </body>
     </html>
   );
