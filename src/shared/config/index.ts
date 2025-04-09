@@ -1,0 +1,1 @@
+export const WEBSOCKET_BASE_URL = process.env.NEXT_PUBLIC_WEBSOCKET_BASE_URL;
