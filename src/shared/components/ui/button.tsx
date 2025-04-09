@@ -36,6 +36,12 @@ const buttonVariants = cva(
   },
 );
 
+type ButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    isLoading?: boolean;
+  };
+
 function Button({
   className,
   variant,
@@ -45,13 +51,10 @@ function Button({
   disabled,
   isLoading,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-    isLoading?: boolean;
-  }) {
+}: ButtonProps) {
   const Comp = asChild ? Slot : "button";
   const isDisabled = disabled || isLoading;
+  const replaceWithLoader = size === "icon" && isLoading;
 
   return (
     <Comp
@@ -61,9 +64,10 @@ function Button({
       {...props}
     >
       {isLoading && <Loader2 className="animate-spin" />}
-      {children}
+      {!replaceWithLoader && children}
     </Comp>
   );
 }
 
 export { Button, buttonVariants };
+export type { ButtonProps };
