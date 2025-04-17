@@ -3,6 +3,9 @@ import { create } from "zustand";
 
 import { useWebSocketStore } from "@/features/websocket";
 
+import { addEventHandler, removeEventHandler } from "./lib/signaling";
+import * as send from "./lib/webrtc";
+
 interface MicrophoneState {
   stream: MediaStream | null;
   requestStreamAccess: () => Promise<MediaStream>;
@@ -47,15 +50,15 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
 
-    stream
-      .getTracks()
-      .forEach((track) => peerConnection.addTrack(track, stream));
-
-    peerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        socket.emit("ice-candidate", event.candidate.toJSON());
+    stream.getTracks().forEach((track) => {
+      console.debug("Track:", track);
+      if (track.kind !== "audio") {
+        return;
       }
-    };
+      peerConnection.addTrack(track, stream);
+    });
+
+    peerConnection.onicecandidate = send.icecandidate(socket);
 
     peerConnection.onconnectionstatechange = () => {
       if (peerConnection.connectionState === "connected") {
@@ -64,34 +67,16 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
     };
 
     try {
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
-      socket.emit("offer", offer);
-
-      socket.off("answer");
-      socket.on("answer", async (answer: RTCSessionDescriptionInit) => {
-        await peerConnection.setRemoteDescription(
-          new RTCSessionDescription(answer),
-        );
-        console.debug("Received answer from server");
-      });
-
-      socket.off("ice-candidate");
-      socket.on("ice-candidate", async (candidate: RTCIceCandidateInit) => {
-        console.debug("Received ice candidate from server");
-        try {
-          await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-        } catch (e) {
-          console.error("Error adding received ice candidate", e);
-        }
-      });
+      await send.offer(socket, peerConnection);
+      addEventHandler.answer(socket, peerConnection);
+      addEventHandler.icecandidate(socket, peerConnection);
+      addEventHandler.renegotiate(socket, peerConnection);
 
       set({ peerConnection });
     } catch (e) {
       console.error("Error connecting to WebRTC", e);
       toast.error("서버와 연결하는 중 오류가 발생했습니다.");
-      socket.off("answer");
-      socket.off("ice-candidate");
+      removeEventHandler(socket);
       peerConnection.close();
       stream.getTracks().forEach((track) => track.stop());
     }
