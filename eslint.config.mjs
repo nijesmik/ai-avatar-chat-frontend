@@ -14,6 +14,15 @@ const eslintConfig = [
 
   {
     rules: {
+      "no-unused-vars": "warn",
+      "no-multiple-empty-lines": [
+        "error",
+        {
+          max: 1,
+          maxEOF: 1,
+          maxBOF: 0,
+        },
+      ],
       "object-shorthand": ["error", "always"],
       "react-hooks/exhaustive-deps": "off",
     },
