@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons";
 
+import { blinkEyes } from "../lib/avatar";
 import { addLight, rotateChild } from "../lib/three";
 
 const WIDTH = 640;
@@ -37,7 +38,8 @@ export const useAvatar = () => {
       rotateChild(model, "LeftArm", "x", Math.PI / 2);
       rotateChild(model, "RightArm", "x", Math.PI / 2);
 
-      const face = model.getObjectByName("Wolf3D_Avatar");
+      const avatar = model.getObjectByName("Wolf3D_Avatar") as SkinnedMesh;
+      blinkEyes(avatar);
     });
 
     const animate = () => {
