@@ -18,7 +18,7 @@ const eslintConfig = [
   },
 
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-  ...compat.plugins(" @typescript-eslint"),
+  ...compat.plugins("@typescript-eslint"),
 
   {
     rules: {
