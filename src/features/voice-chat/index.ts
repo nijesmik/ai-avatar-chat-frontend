@@ -1,1 +1,2 @@
-export { useVoiceChatConnect, useVoiceChatStore } from "./store";
+export { useVoiceChatConnect } from "./hook/connect";
+export { useVoiceChatStore } from "./store";
