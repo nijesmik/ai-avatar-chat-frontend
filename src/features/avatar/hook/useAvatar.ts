@@ -11,6 +11,7 @@ const ASPECT = WIDTH / HEIGHT;
 
 export const useAvatar = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>(-1);
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -39,13 +40,19 @@ export const useAvatar = () => {
       rotateChild(model, "RightArm", "x", Math.PI / 2);
 
       const avatar = model.getObjectByName("Wolf3D_Avatar") as SkinnedMesh;
-      blinkEyes(avatar);
+      blinkEyes(avatar, animationRef);
     });
 
     const animate = () => {
       renderer.render(scene, camera);
     };
     renderer.setAnimationLoop(animate);
+
+    return () => {
+      if (animationRef.current !== -1) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
   }, []);
 
   return { canvasRef };
