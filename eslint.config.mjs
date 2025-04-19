@@ -1,4 +1,5 @@
 import { FlatCompat } from "@eslint/eslintrc";
+import tsParser from "@typescript-eslint/parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -10,11 +11,19 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    languageOptions: {
+      parser: tsParser,
+    },
+  },
+
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.plugins(" @typescript-eslint"),
 
   {
     rules: {
-      "no-unused-vars": "warn",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", {}],
       "no-multiple-empty-lines": [
         "error",
         {
