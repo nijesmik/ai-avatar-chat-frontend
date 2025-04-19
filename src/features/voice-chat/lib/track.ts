@@ -1,4 +1,4 @@
-import { useVoiceChatStore } from "../store";
+import { useAudioStore } from "@/features/audio";
 
 const getRemoteStream = (event: RTCTrackEvent) => {
   return event.streams[0] || new MediaStream([event.track]);
@@ -6,7 +6,7 @@ const getRemoteStream = (event: RTCTrackEvent) => {
 
 export const ontrack = (event: RTCTrackEvent) => {
   console.debug("ontrack:", event);
-  const { audioContext, audioRef } = useVoiceChatStore.getState();
+  const { audioContext, audioRef } = useAudioStore.getState();
   if (!audioContext || !audioRef?.current) {
     console.error("❌ Audio is not set");
     return;
