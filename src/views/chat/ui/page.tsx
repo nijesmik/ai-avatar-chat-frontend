@@ -3,7 +3,11 @@
 import { AudioLines, Mic, MicOff, X } from "lucide-react";
 import { useCallback, useState } from "react";
 
-import { useVoiceChatConnect, useVoiceChatStore } from "@/features/voice-chat";
+import {
+  useVoiceChatAudio,
+  useVoiceChatConnect,
+  useVoiceChatStore,
+} from "@/features/voice-chat";
 import { Button, type ButtonProps } from "@/shared/components";
 
 const ButtonToggleMute = () => {
@@ -52,10 +56,13 @@ const ButtonStartConversation = () => {
 };
 
 export default function Home() {
+  const { audioRef } = useVoiceChatAudio();
+
   return (
     <main className="h-screen w-screen">
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
         <ButtonStartConversation />
+        <audio ref={audioRef} controls></audio>
       </div>
     </main>
   );

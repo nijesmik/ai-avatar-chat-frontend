@@ -3,6 +3,7 @@ import { create } from "zustand";
 
 import { useWebSocketStore } from "@/features/websocket";
 
+import { ontrack } from "./lib/audio";
 import { addEventHandler, removeEventHandler } from "./lib/signaling";
 import * as send from "./lib/webrtc";
 
@@ -17,14 +18,24 @@ interface WebRTCState {
   peerConnection: RTCPeerConnection | null;
   connectWebRTC: (stream: MediaStream, socket: Socket) => void;
   disconnectWebRTC: () => void;
-}
-
-interface VoiceChatStore extends MicrophoneState, WebRTCState {
   isConnected: boolean;
 }
 
+type AudioRef = RefObject<HTMLAudioElement | null>;
+
+interface AudioState {
+  audioRef: AudioRef | null;
+  audioContext: AudioContext | null;
+  setAudio: (audioContext: AudioContext, audioRef: AudioRef) => void;
+}
+
+type VoiceChatStore = MicrophoneState & WebRTCState & AudioState;
+
 export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
   isConnected: false,
+  audioRef: null,
+  audioContext: null,
+  setAudio: (audioContext, audioRef) => set({ audioContext, audioRef }),
 
   stream: null,
   requestStreamAccess: async () => {
@@ -61,10 +72,13 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
     peerConnection.onicecandidate = send.icecandidate(socket);
 
     peerConnection.onconnectionstatechange = () => {
+      console.debug("ℹ️ connection state:", peerConnection.connectionState);
       if (peerConnection.connectionState === "connected") {
         set({ isConnected: true });
       }
     };
+
+    peerConnection.ontrack = ontrack;
 
     try {
       await send.offer(socket, peerConnection);
