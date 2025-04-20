@@ -1,6 +1,8 @@
 import { toast } from "sonner";
 import { create } from "zustand";
 
+import { useAudioStore } from "@/features/audio";
+
 import { addEventHandler, removeEventHandler } from "./lib/signaling";
 import { ontrack } from "./lib/track";
 import * as send from "./lib/webrtc";
@@ -60,8 +62,13 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
 
     peerConnection.onconnectionstatechange = () => {
       console.debug("ℹ️ connection state:", peerConnection.connectionState);
-      if (peerConnection.connectionState === "connected") {
-        set({ isConnected: true });
+      switch (peerConnection.connectionState) {
+        case "connected":
+          set({ isConnected: true });
+          break;
+        case "failed":
+        case "closed":
+          useAudioStore.getState().cancelDetect();
       }
     };
 
@@ -83,6 +90,7 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
     }
   },
   disconnectWebRTC: () => {
+    useAudioStore.getState().cancelDetect();
     const { peerConnection } = get();
     peerConnection?.close();
     set({ peerConnection: null, isConnected: false });

@@ -1,4 +1,4 @@
-import { useAudioStore } from "@/features/audio";
+import { detectAudioStart, useAudioStore } from "@/features/audio";
 
 const getRemoteStream = (event: RTCTrackEvent) => {
   return event.streams[0] || new MediaStream([event.track]);
@@ -6,20 +6,26 @@ const getRemoteStream = (event: RTCTrackEvent) => {
 
 export const ontrack = (event: RTCTrackEvent) => {
   console.debug("ontrack:", event);
-  const { audioContext, audioRef } = useAudioStore.getState();
-  if (!audioContext || !audioRef?.current) {
+  const { audioRef, createAudioContext } = useAudioStore.getState();
+  if (!audioRef?.current) {
     console.error("❌ Audio is not set");
     return;
   }
+
+  const remoteStream = getRemoteStream(event);
+  const audioContext = createAudioContext(remoteStream);
+
   if (audioContext.state === "suspended") {
     audioContext.resume().then(() => {
       console.debug("✅ Audio context resumed");
     });
   }
+
   const audioElement = audioRef.current;
-  audioElement.srcObject = getRemoteStream(event);
+  audioElement.srcObject = remoteStream;
   audioElement.play().then(() => {
     console.debug("✅ Audio element playing");
+    detectAudioStart();
   });
 
   event.track.onended = () => {
