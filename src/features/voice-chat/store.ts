@@ -3,9 +3,9 @@ import { create } from "zustand";
 
 import { useAudioStore } from "@/features/audio";
 
-import { addEventHandler, removeEventHandler } from "./lib/signaling";
 import { ontrack } from "./lib/track";
 import * as send from "./lib/webrtc";
+import { addEventHandler, removeEventHandler } from "./lib/websocket";
 
 interface MicrophoneState {
   stream: MediaStream | null;
@@ -79,6 +79,7 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
       addEventHandler.answer(socket, peerConnection);
       addEventHandler.icecandidate(socket, peerConnection);
       addEventHandler.renegotiate(socket, peerConnection);
+      addEventHandler.viseme(socket);
 
       set({ peerConnection });
     } catch (e) {
