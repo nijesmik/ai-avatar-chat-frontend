@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons";
 
+import { useAvatarStore } from "@/features/avatar/store";
+
 import { blinkEyes } from "../lib/avatar";
 import { addLight, rotateChild } from "../lib/three";
 
@@ -11,7 +13,8 @@ const ASPECT = WIDTH / HEIGHT;
 
 export const useAvatar = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>(-1);
+  const blinkAnimationRef = useRef<number>(-1);
+  const visemeAnimationRef = useRef<number>(-1);
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -21,8 +24,8 @@ export const useAvatar = () => {
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current!,
-      alpha: true,
-      antialias: true,
+      alpha: true, // transparent background
+      antialias: true, // smooth edges
     });
     renderer.setSize(WIDTH, HEIGHT);
 
@@ -40,7 +43,10 @@ export const useAvatar = () => {
       rotateChild(model, "RightArm", "x", Math.PI / 2);
 
       const avatar = model.getObjectByName("Wolf3D_Avatar") as SkinnedMesh;
-      blinkEyes(avatar, animationRef);
+      blinkEyes(avatar, blinkAnimationRef);
+
+      const { initialize } = useAvatarStore.getState();
+      initialize({ avatar, visemeAnimationRef });
     });
 
     const animate = () => {
@@ -49,8 +55,11 @@ export const useAvatar = () => {
     renderer.setAnimationLoop(animate);
 
     return () => {
-      if (animationRef.current !== -1) {
-        cancelAnimationFrame(animationRef.current);
+      if (blinkAnimationRef.current !== -1) {
+        cancelAnimationFrame(blinkAnimationRef.current);
+      }
+      if (visemeAnimationRef.current !== -1) {
+        cancelAnimationFrame(visemeAnimationRef.current);
       }
     };
   }, []);

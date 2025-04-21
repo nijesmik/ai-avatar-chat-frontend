@@ -1,3 +1,5 @@
+import { processViseme } from "@/features/avatar";
+
 import { useAudioStore } from "../store";
 
 const THRESHOLD = 1;
@@ -18,7 +20,7 @@ export const detectAudioStart = () => {
     );
 
     if (rootMeanSquare > THRESHOLD) {
-      console.debug("🔊 Audio detected");
+      processViseme();
       detectRef.current = -1;
       return;
     }
