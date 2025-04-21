@@ -1,0 +1,140 @@
+[
+  {
+    "animation": "",
+    "audio_offset": 12.5,
+    "viseme_id": 0
+  },
+  {
+    "animation": "",
+    "audio_offset": 62.5,
+    "viseme_id": 2
+  },
+  {
+    "animation": "",
+    "audio_offset": 350.0,
+    "viseme_id": 19
+  },
+  {
+    "animation": "",
+    "audio_offset": 387.5,
+    "viseme_id": 19
+  },
+  {
+    "animation": "",
+    "audio_offset": 450.0,
+    "viseme_id": 6
+  },
+  {
+    "animation": "",
+    "audio_offset": 475.0,
+    "viseme_id": 1
+  },
+  {
+    "animation": "",
+    "audio_offset": 500.0,
+    "viseme_id": 20
+  },
+  {
+    "animation": "",
+    "audio_offset": 537.5,
+    "viseme_id": 12
+  },
+  {
+    "animation": "",
+    "audio_offset": 587.5,
+    "viseme_id": 2
+  },
+  {
+    "animation": "",
+    "audio_offset": 637.5,
+    "viseme_id": 15
+  },
+  {
+    "animation": "",
+    "audio_offset": 750.0,
+    "viseme_id": 4
+  },
+  {
+    "animation": "",
+    "audio_offset": 875.0,
+    "viseme_id": 6
+  },
+  {
+    "animation": "",
+    "audio_offset": 975.0,
+    "viseme_id": 8
+  },
+  {
+    "animation": "",
+    "audio_offset": 1100.0,
+    "viseme_id": 21
+  },
+  {
+    "animation": "",
+    "audio_offset": 1300.0,
+    "viseme_id": 2
+  },
+  {
+    "animation": "",
+    "audio_offset": 1362.5,
+    "viseme_id": 19
+  },
+  {
+    "animation": "",
+    "audio_offset": 1412.5,
+    "viseme_id": 20
+  },
+  {
+    "animation": "",
+    "audio_offset": 1487.5,
+    "viseme_id": 2
+  },
+  {
+    "animation": "",
+    "audio_offset": 1537.5,
+    "viseme_id": 21
+  },
+  {
+    "animation": "",
+    "audio_offset": 1600.0,
+    "viseme_id": 15
+  },
+  {
+    "animation": "",
+    "audio_offset": 1650.0,
+    "viseme_id": 6
+  },
+  {
+    "animation": "",
+    "audio_offset": 1700.0,
+    "viseme_id": 21
+  },
+  {
+    "animation": "",
+    "audio_offset": 1750.0,
+    "viseme_id": 19
+  },
+  {
+    "animation": "",
+    "audio_offset": 1812.5,
+    "viseme_id": 6
+  },
+  {
+    "animation": "",
+    "audio_offset": 1862.5,
+    "viseme_id": 19
+  },
+  {
+    "animation": "",
+    "audio_offset": 1925.0,
+    "viseme_id": 2
+  },
+  {
+    "animation": "",
+    "audio_offset": 2274.5,
+    "viseme_id": 0
+  },
+  {
+    "viseme_id": -1
+  }
+]
