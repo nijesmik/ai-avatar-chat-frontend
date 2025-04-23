@@ -11,14 +11,14 @@ const WIDTH = 640;
 const HEIGHT = 480;
 const ASPECT = WIDTH / HEIGHT;
 
-export const useAvatar = () => {
+export const useAvatar = (avatarURL: string = "/avatar.glb") => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blinkAnimationRef = useRef<number>(-1);
   const visemeAnimationRef = useRef<number>(-1);
 
   useEffect(() => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(30, ASPECT, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(32, ASPECT, 0.1, 100);
     camera.position.set(0, 1.75, 0.8);
     camera.rotation.x = -0.07;
 
@@ -29,18 +29,18 @@ export const useAvatar = () => {
     });
     renderer.setSize(WIDTH, HEIGHT);
 
-    addLight(scene, [0, 0.3, 1], 4);
-    addLight(scene, [1, -0.5, 1], 1);
-    addLight(scene, [-1, -0.5, 1], 1);
+    addLight(scene, [0, 0.3, 1], 3.8);
+    addLight(scene, [1, -0.5, 0.5], 1);
+    addLight(scene, [-1, -0.5, 0.5], 1);
 
     const loader = new GLTFLoader();
-    loader.load("/avatar.glb", (gltf) => {
+    loader.load(avatarURL, (gltf) => {
       const model = gltf.scene.children[0];
       scene.add(model);
       console.debug("glb:", model);
 
-      rotateChild(model, "LeftArm", "x", Math.PI / 2);
-      rotateChild(model, "RightArm", "x", Math.PI / 2);
+      rotateChild(model, "LeftArm", "x", Math.PI / 2.2);
+      rotateChild(model, "RightArm", "x", Math.PI / 2.2);
 
       const avatar = model.getObjectByName("Wolf3D_Avatar") as SkinnedMesh;
       blinkEyes(avatar, blinkAnimationRef);
