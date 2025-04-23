@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Toaster } from "@/shared/components";
 import { OverrideConsole } from "@/shared/lib";
 
+import HeroUIProvider from "../providers/heroui";
 import "../styles";
 
 export const metadata: Metadata = {
@@ -18,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <Toaster position="top-center" richColors />
+        <HeroUIProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </HeroUIProvider>
         {process.env.NODE_ENV === "development" && <OverrideConsole />}
       </body>
     </html>
