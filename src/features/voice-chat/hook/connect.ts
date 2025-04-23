@@ -1,6 +1,5 @@
-import { toast } from "sonner";
-
 import { useWebSocketStore } from "@/features/websocket";
+import { toast } from "@/shared/ui";
 
 import { useVoiceChatStore } from "../store";
 

@@ -1,7 +1,7 @@
-import { toast } from "sonner";
 import { create } from "zustand";
 
 import { useAudioStore } from "@/features/audio";
+import { toast } from "@/shared/ui";
 
 import { ontrack } from "./lib/track";
 import * as send from "./lib/webrtc";

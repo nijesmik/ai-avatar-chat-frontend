@@ -2,8 +2,15 @@
 
 import { HeroUIProvider } from "@heroui/react";
 
+import Toaster from "./toast";
+
 const Provider = ({ children }: { children: React.ReactNode }) => {
-  return <HeroUIProvider>{children}</HeroUIProvider>;
+  return (
+    <HeroUIProvider>
+      <Toaster />
+      {children}
+    </HeroUIProvider>
+  );
 };
 
 export default Provider;

@@ -1,8 +1,8 @@
 import { io } from "socket.io-client";
-import { toast } from "sonner";
 import { create } from "zustand";
 
 import { WEBSOCKET_BASE_URL } from "@/shared/config";
+import { toast } from "@/shared/ui";
 
 interface WebSocketStore {
   socket: Socket;
