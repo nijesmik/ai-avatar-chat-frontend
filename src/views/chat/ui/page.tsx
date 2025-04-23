@@ -1,21 +1,22 @@
 "use client";
 
+import { Button } from "@heroui/react";
 import { AudioLines, Mic, MicOff, X } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import { AudioPlayer } from "@/features/audio";
 import AvatarCanvas from "@/features/avatar";
 import { useVoiceChatConnect, useVoiceChatStore } from "@/features/voice-chat";
-import { Button, type ButtonProps } from "@/shared/components";
 
 const ButtonToggleMute = () => {
   const { isMuted, toggleMute } = useVoiceChatStore();
-  const buttonVariant: ButtonProps["variant"] = isMuted
-    ? "destructive"
-    : "secondary";
 
   return (
-    <Button onClick={toggleMute} variant={buttonVariant} size="icon">
+    <Button
+      onPress={toggleMute}
+      color={isMuted ? "danger" : "secondary"}
+      isIconOnly
+    >
       {isMuted ? <MicOff /> : <Mic />}
     </Button>
   );
@@ -37,7 +38,12 @@ const ButtonStartConversation = () => {
 
   if (!isConnected) {
     return (
-      <Button onClick={handleClick} isLoading={isLoading} size="icon">
+      <Button
+        onPress={handleClick}
+        isLoading={isLoading}
+        isIconOnly
+        color="primary"
+      >
         <AudioLines />
       </Button>
     );
@@ -46,7 +52,7 @@ const ButtonStartConversation = () => {
   return (
     <div className="flex gap-2">
       <ButtonToggleMute />
-      <Button onClick={handleClick} size="icon">
+      <Button onPress={handleClick} isIconOnly color="primary">
         <X />
       </Button>
     </div>
