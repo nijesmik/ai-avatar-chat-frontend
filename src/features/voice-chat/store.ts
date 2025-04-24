@@ -80,6 +80,7 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
       addEventHandler.icecandidate(socket, peerConnection);
       addEventHandler.renegotiate(socket, peerConnection);
       addEventHandler.viseme(socket);
+      addEventHandler.message(socket);
 
       set({ peerConnection });
     } catch (e) {
