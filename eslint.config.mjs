@@ -34,6 +34,23 @@ const eslintConfig = [
       ],
       "object-shorthand": ["error", "always"],
       "react-hooks/exhaustive-deps": "off",
+      "react/jsx-sort-props": [
+        "warn",
+        {
+          callbacksLast: true,
+          shorthandFirst: true,
+          ignoreCase: true,
+          noSortAlphabetically: false,
+          reservedFirst: true,
+        },
+      ],
+      "react/jsx-curly-brace-presence": [
+        "error",
+        {
+          props: "never",
+          children: "ignore",
+        },
+      ],
       "simple-import-sort/exports": "warn",
     },
   },
