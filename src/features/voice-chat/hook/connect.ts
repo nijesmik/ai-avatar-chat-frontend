@@ -9,19 +9,19 @@ export const useVoiceChatConnect = () => {
   const disconnect = useVoiceChatStore((state) => state.disconnectWebRTC);
 
   const connect = () => {
-    const { stream, requestStreamAccess, connectWebRTC } =
+    const { track, requestStreamAccess, connectWebRTC } =
       useVoiceChatStore.getState();
 
-    if (!stream) {
+    if (!track) {
       requestStreamAccess()
-        .then((stream) => {
-          connectWebRTC(stream, socket);
+        .then(() => {
+          connectWebRTC(socket);
         })
         .catch(() => {
           toast.error("마이크 접근 권한을 허용해주세요.");
         });
     } else if (!isConnected) {
-      connectWebRTC(stream, socket);
+      connectWebRTC(socket);
     }
   };
 

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { useAudioStore } from "@/features/audio";
+import { getLabel } from "@/features/voice-chat/lib/mic";
 import { toast } from "@/shared/ui";
 
 import { ontrack } from "./lib/track";
@@ -9,14 +10,16 @@ import { addEventHandler, removeEventHandler } from "./lib/websocket";
 
 interface MicrophoneState {
   stream: MediaStream | null;
-  requestStreamAccess: () => Promise<MediaStream>;
+  track: MediaStreamTrack | null;
+  label: string;
+  requestStreamAccess: () => Promise<void>;
   isMuted: boolean;
   toggleMute: () => void;
 }
 
 interface WebRTCState {
   peerConnection: RTCPeerConnection | null;
-  connectWebRTC: (stream: MediaStream, socket: Socket) => void;
+  connectWebRTC: (socket: Socket) => void;
   disconnectWebRTC: () => void;
   isConnected: boolean;
 }
@@ -27,39 +30,48 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
   isConnected: false,
 
   stream: null,
+  track: null,
+  label: "",
   requestStreamAccess: async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    set({ stream });
-    return stream;
+    const tracks = stream.getAudioTracks();
+    console.debug("tracks:", tracks);
+
+    if (!tracks.length) {
+      set({ stream });
+      toast.error("마이크를 찾을 수 없습니다.");
+      return;
+    }
+
+    const track = tracks[0];
+    const label = getLabel(track);
+    set({ stream, track, label });
   },
   isMuted: false,
   toggleMute: () =>
     set((state) => {
-      const { stream, isMuted: prev } = state;
-      if (stream === null) {
+      const { track, isMuted: prev } = state;
+      if (track === null) {
         return state;
       }
       const isMuted = !prev;
-      stream.getAudioTracks()[0].enabled = !isMuted;
+      track.enabled = !isMuted;
       return { isMuted };
     }),
 
   peerConnection: null,
-  connectWebRTC: async (stream, socket) => {
+  connectWebRTC: async (socket) => {
+    const { stream, track } = get();
+    if (!stream || !track) {
+      toast.error("마이크를 먼저 연결해주세요.");
+      return;
+    }
+
     const peerConnection = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
-
-    stream.getTracks().forEach((track) => {
-      console.debug("Track:", track);
-      if (track.kind !== "audio") {
-        return;
-      }
-      peerConnection.addTrack(track, stream);
-    });
-
+    peerConnection.addTrack(track, stream);
     peerConnection.onicecandidate = send.icecandidate(socket);
-
     peerConnection.onconnectionstatechange = () => {
       console.debug("ℹ️ connection state:", peerConnection.connectionState);
       switch (peerConnection.connectionState) {
@@ -71,7 +83,6 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
           useAudioStore.getState().cancelDetect();
       }
     };
-
     peerConnection.ontrack = ontrack;
 
     try {
