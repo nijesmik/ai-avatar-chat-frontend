@@ -1,9 +1,9 @@
 "use client";
 
-import { ToastProvider } from "@heroui/react";
+import { ToastProvider as HeroUIToastProvider } from "@heroui/react";
 
-const Toaster = () => {
-  return <ToastProvider placement="top-center" />;
+const ToastProvider = () => {
+  return <HeroUIToastProvider placement="top-center" />;
 };
 
-export default Toaster;
+export default ToastProvider;

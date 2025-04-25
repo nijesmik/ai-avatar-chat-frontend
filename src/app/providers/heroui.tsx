@@ -1,13 +1,16 @@
 "use client";
 
 import { HeroUIProvider } from "@heroui/react";
+import dynamic from "next/dynamic";
 
-import Toaster from "./toast";
+const ToastProvider = dynamic(() => import("./toast"), {
+  ssr: false,
+});
 
-const Provider = ({ children }: { children: React.ReactNode }) => {
+const Provider = ({ children }: { children: ReactNode }) => {
   return (
     <HeroUIProvider>
-      <Toaster />
+      <ToastProvider />
       {children}
     </HeroUIProvider>
   );
