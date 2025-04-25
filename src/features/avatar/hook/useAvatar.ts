@@ -7,18 +7,15 @@ import { useAvatarStore } from "@/features/avatar/store";
 import { blinkEyes } from "../lib/avatar";
 import { addLight, rotateChild } from "../lib/three";
 
-const WIDTH = 640;
-const HEIGHT = 480;
-const ASPECT = WIDTH / HEIGHT;
-
 export const useAvatar = (avatarURL: string = "/avatar.glb") => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blinkAnimationRef = useRef<number>(-1);
   const visemeAnimationRef = useRef<number>(-1);
 
   useEffect(() => {
+    const size = Math.min(800, window.innerWidth) * 0.8;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(32, ASPECT, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
     camera.position.set(0, 1.75, 0.8);
     camera.rotation.x = -0.07;
 
@@ -27,7 +24,7 @@ export const useAvatar = (avatarURL: string = "/avatar.glb") => {
       alpha: true, // transparent background
       antialias: true, // smooth edges
     });
-    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setSize(size, size);
 
     addLight(scene, [0, 0.3, 1], 3.8);
     addLight(scene, [1, -0.5, 0.5], 1);

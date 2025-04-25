@@ -6,10 +6,12 @@ const Messages = () => {
   const messages = useMessageStore((state) => state.messages);
 
   return (
-    <div className="flex w-full max-w-[64rem] flex-col">
-      {messages.map((message) => {
-        return <MessageUser key={message.content.text} message={message} />;
-      })}
+    <div className="flex size-full justify-center overflow-y-auto pb-20">
+      <div className="w-full max-w-3xl">
+        {messages.map((message) => {
+          return <MessageUser key={message.content.text} message={message} />;
+        })}
+      </div>
     </div>
   );
 };

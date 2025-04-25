@@ -20,5 +20,5 @@ export const AudioPlayer = () => {
     };
   }, []);
 
-  return <audio ref={audioRef} controls />;
+  return <audio ref={audioRef} />;
 };
