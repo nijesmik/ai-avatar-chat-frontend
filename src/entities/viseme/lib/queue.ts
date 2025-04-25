@@ -15,7 +15,7 @@ export class Queue<T> {
   }
 
   clear() {
-    this.items = [];
+    this.items = this.items.slice(this.head);
     this.head = 0;
   }
 }

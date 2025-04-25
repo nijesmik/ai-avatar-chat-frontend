@@ -7,7 +7,7 @@ import { useAvatarStore } from "../store";
 
 const DURATION = {
   rise: 40,
-  hold: 15,
+  hold: 10,
   fall: 50,
 };
 
@@ -62,8 +62,19 @@ const shouldApplyViseme = (v: Viseme): v is _Viseme => {
   return v.viseme_id !== VISEME_ID_END;
 };
 
+const setDetectAudio = (audioStartTime: number, lastViseme: Viseme) => {
+  const time =
+    performance.now() -
+    audioStartTime +
+    lastViseme.audio_offset +
+    DURATION.hold +
+    DURATION.fall;
+
+  setTimeout(() => detectAudioStart(), time);
+};
+
 export const processViseme = () => {
-  const now = performance.now();
+  const start = performance.now();
   const { queue } = useVisemeStore.getState();
   const { avatar, visemeAnimationRef } = useAvatarStore.getState();
 
@@ -71,19 +82,21 @@ export const processViseme = () => {
     return;
   }
 
+  let prevViseme: Viseme;
+
   const process = () => {
     if (queue.isEmpty()) {
       visemeAnimationRef.current = requestAnimationFrame(process);
     } else {
       const viseme = queue.dequeue();
       if (shouldApplyViseme(viseme)) {
-        applyViseme(avatar, viseme, now);
+        applyViseme(avatar, viseme, start);
         visemeAnimationRef.current = requestAnimationFrame(process);
+        prevViseme = viseme;
       } else {
-        console.debug("🪫 queue is empty");
         queue.clear();
         visemeAnimationRef.current = -1;
-        setTimeout(() => detectAudioStart(), 3000); // TODO: remove
+        setDetectAudio(start, prevViseme);
       }
     }
   };
