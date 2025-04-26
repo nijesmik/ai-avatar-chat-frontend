@@ -9,7 +9,7 @@ const Messages = () => {
     <div className="flex size-full justify-center overflow-y-auto pb-20">
       <div className="w-full max-w-3xl">
         {messages.map((message) => {
-          return <MessageUser key={message.content.text} message={message} />;
+          return <MessageUser key={message.time} message={message} />;
         })}
       </div>
     </div>
