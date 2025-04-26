@@ -44,10 +44,11 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
     }
 
     const track = tracks[0];
+    track.enabled = false;
     const label = getLabel(track);
     set({ stream, track, label });
   },
-  isMuted: false,
+  isMuted: true,
   toggleMute: () =>
     set((state) => {
       const { track, isMuted: prev } = state;
@@ -76,7 +77,8 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
       console.debug("ℹ️ connection state:", peerConnection.connectionState);
       switch (peerConnection.connectionState) {
         case "connected":
-          set({ isConnected: true });
+          track.enabled = true;
+          set({ isConnected: true, isMuted: false });
           break;
         case "failed":
         case "closed":
