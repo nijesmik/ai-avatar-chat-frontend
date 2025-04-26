@@ -2,7 +2,6 @@ import { Textarea } from "@heroui/react";
 import { useCallback, useRef, useState } from "react";
 
 import ButtonSendMessage from "./button-send-message";
-import ButtonVoiceChat from "./button-voice-chat";
 
 const Input = () => {
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -26,11 +25,7 @@ const Input = () => {
         }}
         endContent={
           <div className="flex w-full justify-end pt-1">
-            {hasText ? (
-              <ButtonSendMessage onClick={sendMessage} />
-            ) : (
-              <ButtonVoiceChat />
-            )}
+            <ButtonSendMessage hasText={hasText} onClick={sendMessage} />
           </div>
         }
         maxRows={12}
