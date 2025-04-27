@@ -13,13 +13,13 @@ const Input = () => {
   }, [textRef.current]);
 
   return (
-    <div className="relative mb-8 flex h-24 w-full justify-center">
+    <div className="relative mb-8 flex w-full justify-center">
       <Textarea
         ref={textRef}
         classNames={{
-          base: "absolute bottom-0 z-10 bg-background max-w-3xl px-4",
+          base: "absolute bottom-0 z-10  max-w-3xl px-4",
           inputWrapper:
-            "rounded-3xl p-3 group-data-[focus=true]:border-default-400",
+            "rounded-3xl p-3 group-data-[focus=true]:border-default-400 bg-background",
           innerWrapper: "flex-col ",
           input: "text-medium !px-3",
         }}

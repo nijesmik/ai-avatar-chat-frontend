@@ -13,7 +13,7 @@ const MessageUser = ({ message }: Props) => {
       <div
         className={twMerge(
           "bg-default-100 max-w-2/3 rounded-3xl px-5 py-2",
-          type === "speech" && "text-default-500 italic",
+          type === "speech" && "text-default-600 italic",
         )}
       >
         {content}

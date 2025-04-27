@@ -1,16 +1,11 @@
-"use client";
-
 import { AudioPlayer } from "@/features/audio";
-import { Input } from "@/widgets/input";
-import { Messages } from "@/widgets/messages";
+
+import Chat from "./chat";
 
 export default function Home() {
   return (
     <main className="h-screen w-screen">
-      <div className="grid size-full grid-cols-1 grid-rows-[1fr_auto]">
-        <Messages />
-        <Input />
-      </div>
+      <Chat />
       <AudioPlayer />
     </main>
   );
