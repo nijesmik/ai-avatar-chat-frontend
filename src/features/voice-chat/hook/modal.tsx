@@ -18,11 +18,6 @@ export const useVoiceChatModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { connect, disconnect } = useVoiceChatConnect();
 
-  const closeModal = () => {
-    disconnect();
-    onClose();
-  };
-
   const openModal = () => {
     connect();
     onOpen();
@@ -30,21 +25,23 @@ export const useVoiceChatModal = () => {
 
   const VoiceChatModal = () => {
     return (
-      <Modal hideCloseButton isOpen={isOpen} size="full" onClose={closeModal}>
+      <Modal
+        hideCloseButton
+        isDismissable={false}
+        isKeyboardDismissDisabled={false}
+        isOpen={isOpen}
+        size="full"
+      >
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalBody className="items-center justify-center">
-                <AvatarCanvas />
-              </ModalBody>
-              <ModalFooter className="justify-center pb-6">
-                <div className="flex gap-6">
-                  <ButtonMute />
-                  <ButtonClose onClick={onClose} />
-                </div>
-              </ModalFooter>
-            </>
-          )}
+          <ModalBody className="items-center justify-center">
+            <AvatarCanvas />
+          </ModalBody>
+          <ModalFooter className="justify-center pb-8">
+            <div className="flex gap-6">
+              <ButtonMute />
+              <ButtonClose onClose={onClose} onDisconnect={disconnect} />
+            </div>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     );

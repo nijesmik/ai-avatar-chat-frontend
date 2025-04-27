@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import { useWebSocketStore } from "@/features/websocket";
 import { toast } from "@/shared/ui";
 
@@ -5,9 +7,11 @@ import { useVoiceChatStore } from "../store";
 
 export const useVoiceChatConnect = () => {
   const socket = useWebSocketStore((state) => state.socket);
-  const disconnect = useVoiceChatStore((state) => state.disconnectWebRTC);
+  const { disconnectWebRTC } = useVoiceChatStore.getState();
 
-  const connect = () => {
+  const disconnect = useCallback(() => disconnectWebRTC(socket), [socket]);
+
+  const connect = useCallback(() => {
     const { isConnected, track, requestStreamAccess, connectWebRTC } =
       useVoiceChatStore.getState();
 
@@ -22,7 +26,7 @@ export const useVoiceChatConnect = () => {
     } else if (!isConnected) {
       connectWebRTC(socket);
     }
-  };
+  }, [socket]);
 
   return { connect, disconnect };
 };

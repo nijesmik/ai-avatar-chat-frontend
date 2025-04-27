@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
 import { useAudioStore } from "@/features/audio";
-import { getLabel } from "@/features/voice-chat/lib/mic";
 import { toast } from "@/shared/ui";
 
+import { getLabel } from "./lib/mic";
 import { ontrack } from "./lib/track";
 import * as send from "./lib/webrtc";
 import { addEventHandler, removeEventHandler } from "./lib/websocket";
@@ -20,7 +20,7 @@ interface MicrophoneState {
 interface WebRTCState {
   peerConnection: RTCPeerConnection | null;
   connectWebRTC: (socket: Socket) => void;
-  disconnectWebRTC: () => void;
+  disconnectWebRTC: (socket: Socket) => void;
   isConnected: boolean;
 }
 
@@ -71,6 +71,8 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
     const peerConnection = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
+    set({ peerConnection });
+
     peerConnection.addTrack(track, stream);
     peerConnection.onicecandidate = send.icecandidate(socket);
     peerConnection.onconnectionstatechange = () => {
@@ -82,20 +84,19 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
           break;
         case "failed":
         case "closed":
-          useAudioStore.getState().cancelDetect();
+        case "disconnected":
+          get().disconnectWebRTC(socket);
       }
     };
     peerConnection.ontrack = ontrack;
 
     try {
-      await send.offer(socket, peerConnection);
       addEventHandler.answer(socket, peerConnection);
       addEventHandler.icecandidate(socket, peerConnection);
       addEventHandler.renegotiate(socket, peerConnection);
       addEventHandler.viseme(socket);
       addEventHandler.message(socket);
-
-      set({ peerConnection });
+      await send.offer(socket, peerConnection);
     } catch (e) {
       console.error("Error connecting to WebRTC", e);
       toast.error("서버와 연결하는 중 오류가 발생했습니다.");
@@ -104,10 +105,17 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
       stream.getTracks().forEach((track) => track.stop());
     }
   },
-  disconnectWebRTC: () => {
+
+  disconnectWebRTC: (socket: Socket) => {
     useAudioStore.getState().cancelDetect();
-    const { peerConnection } = get();
-    peerConnection?.close();
-    set({ peerConnection: null, isConnected: false });
+    const { peerConnection, track } = get();
+    if (peerConnection) {
+      peerConnection.close();
+    }
+    removeEventHandler(socket);
+    if (track) {
+      track.enabled = false;
+    }
+    set({ peerConnection: null, isConnected: false, isMuted: true });
   },
 }));
