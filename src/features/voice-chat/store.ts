@@ -5,7 +5,7 @@ import { toast } from "@/shared/ui";
 
 import { getLabel } from "./lib/mic";
 import { ontrack } from "./lib/track";
-import * as send from "./lib/webrtc";
+import { getIceServers, send } from "./lib/webrtc";
 import { addEventHandler, removeEventHandler } from "./lib/websocket";
 
 interface MicrophoneState {
@@ -69,7 +69,7 @@ export const useVoiceChatStore = create<VoiceChatStore>((set, get) => ({
     }
 
     const peerConnection = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+      iceServers: getIceServers(),
     });
     set({ peerConnection });
 
