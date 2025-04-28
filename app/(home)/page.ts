@@ -1,1 +1,1 @@
-export { default } from "@/views/avatar";
+export { default } from "@/views/chat";
