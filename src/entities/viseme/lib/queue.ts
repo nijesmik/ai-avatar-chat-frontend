@@ -18,4 +18,8 @@ export class Queue<T> {
     this.items = this.items.slice(this.head);
     this.head = 0;
   }
+
+  peek() {
+    return this.items[this.head];
+  }
 }
