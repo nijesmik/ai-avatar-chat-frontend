@@ -1,13 +1,18 @@
 interface Viseme {
   animation: string;
   audio_offset: number;
-  viseme_id: VisemeId;
+  viseme_id: StandardVisemeId | EndVisemeId;
 }
 
-type VisemeIdEnd = -1;
+interface VisemeStrict extends Viseme {
+  viseme_id: StandardVisemeId;
+}
 
-type VisemeId =
-  | VisemeIdEnd
+type NonStandardVisemeId<T> = T extends StandardVisemeId ? never : T;
+
+type EndVisemeId = NonStandardVisemeId<-1>;
+
+type StandardVisemeId =
   | 0
   | 1
   | 2

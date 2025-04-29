@@ -1,2 +1,2 @@
-export { VISEME_ID_END, VISEME_MAP } from "./config";
+export { END_VISEME_ID, VISEME_MAP } from "./config";
 export { useVisemeStore } from "./store";

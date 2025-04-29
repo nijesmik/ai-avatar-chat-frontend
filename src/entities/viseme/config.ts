@@ -1,9 +1,6 @@
-export const VISEME_ID_END: VisemeIdEnd = -1 as const;
+export const END_VISEME_ID: EndVisemeId = -1 as const;
 
-export const VISEME_MAP: Record<
-  Exclude<VisemeId, VisemeIdEnd>,
-  [MorphTarget, number][]
-> = {
+export const VISEME_MAP: Record<StandardVisemeId, [MorphTarget, number][]> = {
   0: [["viseme_sil", 1.0]],
   1: [
     ["viseme_aa", 0.5],

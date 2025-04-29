@@ -1,20 +1,8 @@
 import gsap from "gsap";
 
-import { VISEME_ID_END, VISEME_MAP, useVisemeStore } from "@/entities/viseme";
-import { detectAudioStart } from "@/features/audio";
+import { END_VISEME_ID, VISEME_MAP } from "@/entities/viseme";
 
-import { useAvatarStore } from "../store";
-
-const DEFAULT_DURATION_FALL = 60;
-const DEFAULT_DURATION = {
-  rise: DEFAULT_DURATION_FALL - 10,
-  hold: 80,
-  fall: DEFAULT_DURATION_FALL,
-};
-
-interface _Viseme extends Viseme {
-  viseme_id: Exclude<VisemeId, VisemeIdEnd>;
-}
+import { DEFAULT_DURATION } from "../../config";
 
 const calculateDuration = (gap: number, baseDuration: number) => {
   if (gap <= baseDuration - 10) {
@@ -30,9 +18,9 @@ const calculateDuration = (gap: number, baseDuration: number) => {
     return baseDuration + 10;
   }
   return baseDuration + 20;
-}
+};
 
-const calculateRise = (current: Viseme, previous?: Viseme) => {
+const calculateRise = (current: VisemeStrict, previous?: VisemeStrict) => {
   if (!previous) {
     return DEFAULT_DURATION.rise;
   }
@@ -41,8 +29,8 @@ const calculateRise = (current: Viseme, previous?: Viseme) => {
   return calculateDuration(gap, DEFAULT_DURATION.rise);
 };
 
-const calculateFall = (current: Viseme, next?: Viseme) => {
-  if (!next || next.viseme_id === VISEME_ID_END) {
+const calculateFall = (current: VisemeStrict, next?: Viseme) => {
+  if (!next || next.viseme_id === END_VISEME_ID) {
     return DEFAULT_DURATION.fall;
   }
 
@@ -51,11 +39,11 @@ const calculateFall = (current: Viseme, next?: Viseme) => {
 };
 
 const calculateHold = (
-  current: Viseme,
+  current: VisemeStrict,
   next: Viseme | undefined,
   fall: number,
 ) => {
-  if (!next || next.viseme_id === VISEME_ID_END) {
+  if (!next || next.viseme_id === END_VISEME_ID) {
     return DEFAULT_DURATION.hold;
   }
 
@@ -64,7 +52,7 @@ const calculateHold = (
   return Math.min(hold, DEFAULT_DURATION.hold);
 };
 
-const applyViseme = ({
+export const applyViseme = ({
   avatar,
   previous,
   current,
@@ -72,8 +60,8 @@ const applyViseme = ({
   audioStartTime,
 }: {
   avatar: SkinnedMesh;
-  previous?: Viseme;
-  current: _Viseme;
+  previous?: VisemeStrict;
+  current: VisemeStrict;
   next?: Viseme;
   audioStartTime: number;
 }) => {
@@ -118,54 +106,6 @@ const applyViseme = ({
   }
 };
 
-const shouldApplyViseme = (v: Viseme): v is _Viseme => {
-  return v.viseme_id !== VISEME_ID_END;
-};
-
-const setDetectAudio = (audioStartTime: number, lastViseme: Viseme) => {
-  const time =
-    performance.now() -
-    audioStartTime +
-    lastViseme.audio_offset +
-    DEFAULT_DURATION.hold +
-    DEFAULT_DURATION.fall;
-
-  setTimeout(() => detectAudioStart(), time);
-};
-
-export const processViseme = () => {
-  const start = performance.now();
-  const { queue } = useVisemeStore.getState();
-  const { avatar, visemeAnimationRef } = useAvatarStore.getState();
-
-  if (!avatar || !visemeAnimationRef) {
-    return;
-  }
-
-  let prevViseme: Viseme;
-
-  const process = () => {
-    if (queue.isEmpty()) {
-      visemeAnimationRef.current = requestAnimationFrame(process);
-    } else {
-      const viseme = queue.dequeue();
-      if (shouldApplyViseme(viseme)) {
-        applyViseme({
-          avatar,
-          current: viseme,
-          previous: prevViseme,
-          next: queue.peek(),
-          audioStartTime: start,
-        });
-        prevViseme = viseme;
-        visemeAnimationRef.current = requestAnimationFrame(process);
-      } else {
-        queue.clear();
-        visemeAnimationRef.current = -1;
-        setDetectAudio(start, prevViseme);
-      }
-    }
-  };
-
-  process();
+export const shouldApplyViseme = (v: Viseme): v is VisemeStrict => {
+  return v.viseme_id !== END_VISEME_ID;
 };
