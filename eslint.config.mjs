@@ -51,6 +51,13 @@ const eslintConfig = [
           children: "ignore",
         },
       ],
+      "react/self-closing-comp": [
+        "error",
+        {
+          component: true,
+          html: true,
+        },
+      ],
       "simple-import-sort/exports": "warn",
     },
   },
