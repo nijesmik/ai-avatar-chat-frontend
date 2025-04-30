@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { useAvatar } from "../hook/useAvatar";
 
 const AvatarCanvas = () => {
@@ -10,4 +12,4 @@ const AvatarCanvas = () => {
   );
 };
 
-export default AvatarCanvas;
+export default memo(AvatarCanvas);

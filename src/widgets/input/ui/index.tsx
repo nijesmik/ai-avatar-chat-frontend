@@ -1,5 +1,5 @@
 import { Textarea } from "@heroui/react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, memo } from "react";
 
 import ButtonSendMessage from "./button-send-message";
 
@@ -38,4 +38,4 @@ const Input = () => {
   );
 };
 
-export default Input;
+export default memo(Input);

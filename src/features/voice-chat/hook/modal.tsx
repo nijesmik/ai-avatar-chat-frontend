@@ -8,8 +8,7 @@ import {
   useDisclosure,
 } from "@heroui/react";
 
-import AvatarCanvas from "@/features/avatar";
-
+import Avatar from "../ui/avatar";
 import ButtonClose from "../ui/button-close";
 import ButtonMute from "../ui/button-mute";
 import { useVoiceChatConnect } from "./connect";
@@ -34,7 +33,7 @@ export const useVoiceChatModal = () => {
       >
         <ModalContent>
           <ModalBody className="items-center justify-center">
-            <AvatarCanvas />
+            <Avatar />
           </ModalBody>
           <ModalFooter className="justify-center pb-8">
             <div className="flex gap-6">
