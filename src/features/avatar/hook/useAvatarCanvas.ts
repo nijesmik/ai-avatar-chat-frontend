@@ -9,7 +9,7 @@ import { useAvatarStore } from "@/features/avatar/store";
 import { blinkEyes } from "../lib/avatar";
 import { addLight, rotateChild } from "../lib/three";
 
-export const useAvatar = (avatarURL: string = "/avatar.glb") => {
+export const useAvatarCanvas = (avatarURL: string = "/avatar.glb") => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blinkAnimationRef = useRef<number>(-1);
   const visemeAnimationRef = useRef<number>(-1);

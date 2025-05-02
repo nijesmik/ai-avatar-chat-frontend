@@ -1,9 +1,9 @@
 import { memo } from "react";
 
-import { useAvatar } from "../hook/useAvatar";
+import { useAvatarCanvas } from "../hook/useAvatarCanvas";
 
 const AvatarCanvas = () => {
-  const { canvasRef } = useAvatar();
+  const { canvasRef } = useAvatarCanvas();
 
   return (
     <div className="flex aspect-square w-fit items-center justify-center overflow-hidden rounded-full border">
