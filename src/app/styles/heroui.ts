@@ -7,6 +7,9 @@ export default heroui({
         primary: {
           DEFAULT: "#000000",
         },
+        secondary: {
+          DEFAULT: "#006FEE",
+        },
         danger: {
           50: "#fef1f1",
           100: "#fdd8db",

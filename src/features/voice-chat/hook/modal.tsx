@@ -5,12 +5,14 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
+  ModalHeader,
   useDisclosure,
 } from "@heroui/react";
 
 import Avatar from "../ui/avatar";
 import ButtonClose from "../ui/button-close";
 import ButtonMute from "../ui/button-mute";
+import SelectAvatar from "../ui/select-avatar";
 import { useVoiceChatConnect } from "./connect";
 
 export const useVoiceChatModal = () => {
@@ -32,6 +34,9 @@ export const useVoiceChatModal = () => {
         size="full"
       >
         <ModalContent>
+          <ModalHeader className="justify-end">
+            <SelectAvatar />
+          </ModalHeader>
           <ModalBody className="items-center justify-center">
             <Avatar />
           </ModalBody>
