@@ -1,6 +1,10 @@
-export const DEFAULT_DURATION_FALL = 60;
+const DEFAULT_DURATION_FALL = 100;
 export const DEFAULT_DURATION = {
-  rise: DEFAULT_DURATION_FALL - 10,
-  hold: 80,
+  rise: DEFAULT_DURATION_FALL,
+  hold: 10,
   fall: DEFAULT_DURATION_FALL,
+};
+
+export const MAX_DURATION = {
+  hold: 80,
 };

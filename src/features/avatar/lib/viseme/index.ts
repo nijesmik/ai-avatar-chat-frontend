@@ -3,7 +3,8 @@ import { detectAudioStart } from "@/features/audio";
 
 import { DEFAULT_DURATION } from "../../config";
 import { useAvatarStore } from "../../store";
-import { applyViseme, shouldApplyViseme } from "./apply-v1";
+import { shouldApplyViseme } from "./apply-v1";
+import { applyViseme } from "./apply-v2";
 
 const setDetectAudio = (audioStartTime: number, lastViseme: Viseme) => {
   const time =
