@@ -17,7 +17,7 @@ const config = {
     require.resolve("@trivago/prettier-plugin-sort-imports"),
     require.resolve("prettier-plugin-tailwindcss"),
   ],
-  tailwindFunctions: ["tv"],
+  tailwindFunctions: ["tv", "cn"],
   importOrder: ["<THIRD_PARTY_MODULES>", "^@/.*$", "^[./]"],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
