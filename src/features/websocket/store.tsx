@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { create } from "zustand";
 
+import { useMessageStore } from "@/entities/message";
 import { WEBSOCKET_BASE_URL } from "@/shared/config";
 import { toast } from "@/shared/ui";
 
@@ -29,6 +30,10 @@ export const useWebSocketStore = create<WebSocketStore>((set) => {
   socket.on("disconnect", () => {
     set({ isConnected: false });
     useAvatarStore.getState().setGender("male");
+  });
+
+  socket.on("message-chunk", (chunk: Chunk) => {
+    useMessageStore.getState().addMessageChunk(chunk);
   });
 
   return {

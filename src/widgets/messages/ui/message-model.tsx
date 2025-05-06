@@ -1,11 +1,27 @@
+import { Spinner } from "@heroui/react";
+
 interface Props {
   message: Message;
 }
 
 const MessageModel = ({ message }: Props) => {
-  const { text } = message.content;
+  const { text, chunks } = message.content;
 
-  return <article className="w-full p-4">{text}</article>;
+  if (chunks && chunks.length === 0) {
+    return (
+      <article className="w-full p-4">
+        <Spinner variant="dots" />
+      </article>
+    );
+  }
+
+  const content = chunks ? chunks.map(({ text }) => text).join("") : text;
+
+  return (
+    <article className="w-full p-4">
+      <p>{content}</p>
+    </article>
+  );
 };
 
 export default MessageModel;

@@ -1,21 +1,44 @@
 import { Textarea } from "@heroui/react";
-import { useCallback, useRef, useState, memo } from "react";
+import { memo, useCallback, useMemo, useRef } from "react";
 
+import { useInputStore } from "../store";
 import ButtonSendMessage from "./button-send-message";
 
 const Input = () => {
-  const textRef = useRef<HTMLTextAreaElement>(null);
-  const [hasText, setHasText] = useState(false);
+  const value = useInputStore((state) => state.value);
+  const compositionRef = useRef(false);
+  const { setValue, sendMessage } = useInputStore.getState();
 
-  const sendMessage = useCallback(() => {
-    const text = textRef.current?.value;
-    // TODO: send message
-  }, [textRef.current]);
+  const endContent = useMemo(
+    () => (
+      <div className="flex w-full justify-end pt-1">
+        <ButtonSendMessage />
+      </div>
+    ),
+    [],
+  );
+
+  const onKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (compositionRef.current) {
+      return;
+    }
+    if (e.key === "Enter" && e.shiftKey === false) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }, []);
+
+  const onCompositionStart = useCallback(() => {
+    compositionRef.current = true;
+  }, []);
+
+  const onCompositionEnd = useCallback(() => {
+    compositionRef.current = false;
+  }, []);
 
   return (
     <div className="relative mb-8 flex w-full justify-center">
       <Textarea
-        ref={textRef}
         classNames={{
           base: "absolute bottom-0 z-10  max-w-3xl px-4",
           inputWrapper:
@@ -23,16 +46,16 @@ const Input = () => {
           innerWrapper: "flex-col ",
           input: "text-medium !px-3",
         }}
-        endContent={
-          <div className="flex w-full justify-end pt-1">
-            <ButtonSendMessage hasText={hasText} onClick={sendMessage} />
-          </div>
-        }
+        endContent={endContent}
         maxRows={12}
         minRows={1}
         placeholder="무엇이든 물어보세요"
+        value={value}
         variant="bordered"
-        onValueChange={(value) => setHasText(Boolean(value))}
+        onCompositionEnd={onCompositionEnd}
+        onCompositionStart={onCompositionStart}
+        onKeyDown={onKeyDown}
+        onValueChange={setValue}
       />
     </div>
   );

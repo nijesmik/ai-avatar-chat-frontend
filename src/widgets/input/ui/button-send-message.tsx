@@ -4,13 +4,12 @@ import { CornerDownLeft } from "lucide-react";
 import { useWebSocketStore } from "@/features/websocket";
 import ButtonVoiceChat from "@/widgets/input/ui/button-voice-chat";
 
-interface Props {
-  onClick: () => void;
-  hasText: boolean;
-}
+import { useInputStore } from "../store";
 
-const ButtonSendMessage = ({ onClick, hasText }: Props) => {
+const ButtonSendMessage = () => {
   const isConnected = useWebSocketStore((state) => state.isConnected);
+  const hasText = useInputStore((state) => Boolean(state.value.trim()));
+  const { sendMessage } = useInputStore.getState();
 
   if (!hasText && isConnected) {
     return <ButtonVoiceChat />;
@@ -20,9 +19,9 @@ const ButtonSendMessage = ({ onClick, hasText }: Props) => {
     <Button
       isIconOnly
       color="primary"
-      isDisabled={true || !hasText} // TODO: remove true after implementing text mode
+      isDisabled={!hasText}
       radius="full"
-      onPress={onClick}
+      onPress={sendMessage}
     >
       <CornerDownLeft />
     </Button>
