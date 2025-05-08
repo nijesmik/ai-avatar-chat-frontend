@@ -7,6 +7,7 @@ interface AvatarState {
   defaultModelMale: Object3D | null;
   defaultModelFemale: Object3D | null;
   gender: Gender;
+  voiceMale: VoiceMale;
 
   avatar: SkinnedMesh | null;
   visemeAnimationRef: RefObject<number> | null;
@@ -17,6 +18,7 @@ interface AvatarAction {
   setGender: (gender: Gender) => boolean;
   setVisemeAnimationRef: (ref: RefObject<number>) => void;
   setAvatar: (avatar: SkinnedMesh) => void;
+  setVoiceMale: (voiceMale: VoiceMale) => void;
 }
 
 type AvatarStore = AvatarState & AvatarAction;
@@ -25,6 +27,7 @@ export const useAvatarStore = create<AvatarStore>((set, get) => ({
   defaultModelMale: null,
   defaultModelFemale: null,
   gender: "male",
+  voiceMale: 'InJoon',
 
   avatar: null,
   visemeAnimationRef: null,
@@ -53,4 +56,6 @@ export const useAvatarStore = create<AvatarStore>((set, get) => ({
 
   setVisemeAnimationRef: (visemeAnimationRef) => set({ visemeAnimationRef }),
   setAvatar: (avatar) => set({ avatar }),
+
+  setVoiceMale: (voiceMale) => set({ voiceMale }),
 }));

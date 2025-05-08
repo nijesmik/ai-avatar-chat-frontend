@@ -4,3 +4,5 @@ type SkinnedMesh = import("three").SkinnedMesh & {
 };
 
 type Gender = "male" | "female";
+
+type VoiceMale = "InJoon" | "Hyunsu"
