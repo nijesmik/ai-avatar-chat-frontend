@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useMessageStore } from "@/entities/message";
 
 import MessageModel from "./message-model";
+import MessageSystem from "./message-system";
 import MessageUser from "./message-user";
 
 const Messages = () => {
@@ -25,6 +26,9 @@ const Messages = () => {
         {messages.map((message) => {
           if (message.role === "model") {
             return <MessageModel key={message.time} message={message} />;
+          }
+          if (message.role === "system") {
+            return <MessageSystem key={message.time} message={message} />;
           }
           return <MessageUser key={message.time} message={message} />;
         })}

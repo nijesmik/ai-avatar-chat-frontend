@@ -1,8 +1,8 @@
-type Role = "user" | "model";
+type Role = "user" | "model" | "system";
 
 interface Content {
   text: string;
-  type: "speech" | "text";
+  type: "speech" | "text" | "error";
   chunks?: Chunk[];
 }
 

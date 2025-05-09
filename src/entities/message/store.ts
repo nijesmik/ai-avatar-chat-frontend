@@ -7,6 +7,7 @@ interface MessageState {
 interface MessageAction {
   addMessage: (...messages: Message[]) => void;
   addMessageChunk: (chunk: Chunk) => void;
+  addMessageError: (errorMessage: Message) => void;
 }
 
 type MessageStore = MessageState & MessageAction;
@@ -28,7 +29,15 @@ export const useMessageStore = create<MessageStore>((set) => ({
       messages[lastIndex] = {
         ...last,
         time: chunk.time,
-      }
+      };
+      return { messages };
+    }),
+
+  addMessageError: (errorMessage) =>
+    set((prev) => {
+      const messages = [...prev.messages];
+      messages.pop();
+      messages.push(errorMessage);
       return { messages };
     }),
 }));

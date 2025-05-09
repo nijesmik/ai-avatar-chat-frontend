@@ -1,3 +1,6 @@
 interface WebsocketResponse {
-  status: "ok" | number;
+  status: "ok" | string;
+  code: number;
+  message: string;
+  time: number;
 }

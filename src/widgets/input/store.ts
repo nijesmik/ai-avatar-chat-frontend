@@ -28,7 +28,8 @@ export const useInputStore = create<InputStore>((set, get) => ({
       return;
     }
     set({ value: "", locked: true });
-    useMessageStore.getState().addMessage(
+    const { addMessage, addMessageError } = useMessageStore.getState();
+    addMessage(
       {
         role: "user",
         content: {
@@ -47,7 +48,18 @@ export const useInputStore = create<InputStore>((set, get) => ({
         time: Date.now() + 1,
       },
     );
-    socket.emit("message", { text });
+    socket.emit("message", { text }, (res: WebsocketResponse) => {
+      if (res.status !== "ok") {
+        addMessageError({
+          role: "system",
+          content: {
+            text: res.message,
+            type: "error",
+          },
+          time: res.time,
+        });
+      }
+    });
     setTimeout(() => {
       set({ locked: false });
     }, 1000);
