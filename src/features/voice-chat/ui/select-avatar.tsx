@@ -57,7 +57,7 @@ const Avatar = ({ gender }: { gender: Gender }) => {
   const model = useAvatarStore((state) =>
     gender === "male" ? state.defaultModelMale : state.defaultModelFemale,
   );
-  const { canvasRef, sceneRef } = useAvatarCanvas(160);
+  const { canvasRef, sceneRef } = useAvatarCanvas(520, 0.3);
 
   useEffect(() => {
     if (model) {

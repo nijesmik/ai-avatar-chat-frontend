@@ -33,7 +33,7 @@ const useAvatar = (scene: Scene, model: Object3D | null, gender: Gender) => {
 const AvatarCanvas = () => {
   useVisemeAnimation();
   useAvatarBlink();
-  const { canvasRef, sceneRef } = useAvatarCanvas();
+  const { canvasRef, sceneRef } = useAvatarCanvas(800, 0.8);
   const modelMale = useAvatarStore((state) => state.defaultModelMale);
   const modelFemale = useAvatarStore((state) => state.defaultModelFemale);
   useAvatar(sceneRef.current, modelMale, "male");

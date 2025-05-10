@@ -5,12 +5,12 @@ import * as THREE from "three";
 
 import { addLight } from "../lib/three";
 
-export const useAvatarCanvas = (size?: number) => {
+export const useAvatarCanvas = (maxInnerWidth: number, scale: number) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sceneRef = useRef<THREE.Scene>(new THREE.Scene());
 
   useEffect(() => {
-    const renderSize = size || Math.min(800, window.innerWidth) * 0.8;
+    const renderSize = Math.min(maxInnerWidth, window.innerWidth) * scale;
     const scene = sceneRef.current;
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
     camera.position.set(0, 1.75, 0.8);
