@@ -9,6 +9,8 @@ import {
   useDisclosure,
 } from "@heroui/react";
 
+import { SelectModel } from "@/features/model";
+
 import Avatar from "../ui/avatar";
 import ButtonClose from "../ui/button-close";
 import ButtonMute from "../ui/button-mute";
@@ -34,7 +36,8 @@ export const useVoiceChatModal = () => {
         size="full"
       >
         <ModalContent>
-          <ModalHeader className="justify-end">
+          <ModalHeader className="justify-between">
+            <SelectModel />
             <SelectAvatar />
           </ModalHeader>
           <ModalBody className="items-center justify-center">
