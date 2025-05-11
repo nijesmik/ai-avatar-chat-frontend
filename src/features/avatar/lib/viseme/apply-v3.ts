@@ -1,6 +1,7 @@
 import gsap from "gsap";
 
-import { END_VISEME_ID, VISEME_MAP } from "@/entities/viseme";
+import { VISEME_MAP } from "@/entities/viseme";
+import { detectAudioStart } from "@/features/audio";
 
 import { DEFAULT_DURATION } from "../../config";
 
@@ -8,7 +9,7 @@ const calculateDuration = (
   previous: VisemeStrict | undefined,
   current: VisemeStrict,
 ) => {
-  if (!previous) {
+  if (!previous || previous.audio_offset < DEFAULT_DURATION.fall) {
     return [current.audio_offset, 0];
   }
   const gap = current.audio_offset - previous.audio_offset;
@@ -41,6 +42,20 @@ const applyVisemeFadeOut = (
   }
 };
 
+const calculateAdjustment = (delay: number) => {
+  if (delay < 8500) {
+    return Math.floor(delay * 0.06) + 275;
+  }
+  return Math.floor(delay * 0.05) + 360;
+  //   if (delay < 30000) {
+  //     return Math.floor(delay * 0.03);
+  //   }
+  //   if (delay < 40000) {
+  //     return Math.floor(delay * 0.025) + 150;
+  //   }
+  //   return Math.floor(delay * 0.02) + 350;
+};
+
 export const applyViseme = ({
   avatar,
   previous,
@@ -51,7 +66,7 @@ export const applyViseme = ({
   avatar: SkinnedMesh;
   previous?: VisemeStrict;
   current: VisemeStrict;
-  next: Viseme;
+  next?: Viseme;
   audioStartTime: number;
 }) => {
   const dict = avatar.morphTargetDictionary;
@@ -61,7 +76,8 @@ export const applyViseme = ({
   const timeToStart = audioStartTime + current.audio_offset - duration;
 
   const delayToStart = timeToStart - performance.now();
-  const adjustment = Math.floor(delayToStart * 0.02);
+  const adjustment = calculateAdjustment(delayToStart);
+  const adjustedDelay = delayToStart - adjustment;
 
   for (const [key, value] of VISEME_MAP[current.viseme_id]) {
     const index = dict[key];
@@ -70,7 +86,7 @@ export const applyViseme = ({
       [index]: value,
       duration: duration / 1000,
       ease: "sine.out",
-      delay: (delayToStart - adjustment) / 1000,
+      delay: adjustedDelay / 1000,
       overwrite: "auto",
     });
   }
@@ -83,12 +99,17 @@ export const applyViseme = ({
     applyVisemeFadeOut(previous, avatar, delayToFade, duration);
   }
 
-  if (next.viseme_id === END_VISEME_ID) {
-    applyVisemeFadeOut(
-      current,
-      avatar,
-      audioStartTime + current.audio_offset - performance.now(),
-      DEFAULT_DURATION.fall,
-    );
-  }
+  return () => {
+    const delay = audioStartTime + current.audio_offset - performance.now();
+
+    applyVisemeFadeOut(current, avatar, delay, DEFAULT_DURATION.fall);
+
+    setTimeout(() => {
+      detectAudioStart();
+      console.debug("ℹ🔎 Detect audio start");
+      for (let i = 0; i < influences.length; i++) {
+        influences[i] = 0;
+      }
+    }, delay);
+  };
 };

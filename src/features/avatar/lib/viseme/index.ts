@@ -27,6 +27,7 @@ export const processViseme = () => {
   }
 
   let prevViseme: VisemeStrict;
+  let callback: () => void;
 
   const process = () => {
     if (queue.isEmpty()) {
@@ -34,7 +35,7 @@ export const processViseme = () => {
     } else {
       const viseme = queue.dequeue();
       if (shouldApplyViseme(viseme)) {
-        applyViseme({
+        callback = applyViseme({
           avatar,
           current: viseme,
           previous: prevViseme,
@@ -46,7 +47,8 @@ export const processViseme = () => {
       } else {
         queue.clear();
         visemeAnimationRef.current = -1;
-        setDetectAudio(start, prevViseme);
+        callback();
+        // setDetectAudio(start, prevViseme);
       }
     }
   };

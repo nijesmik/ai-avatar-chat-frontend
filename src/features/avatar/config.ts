@@ -1,4 +1,4 @@
-const DEFAULT_DURATION_FALL = 100;
+const DEFAULT_DURATION_FALL = 110;
 export const DEFAULT_DURATION = {
   rise: DEFAULT_DURATION_FALL,
   hold: 10,
