@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { OverrideConsole } from "@/shared/lib";
-
 import HeroUIProvider from "../providers/heroui";
 import "../styles";
 
@@ -19,7 +17,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <HeroUIProvider>{children}</HeroUIProvider>
-        {process.env.NODE_ENV === "development" && <OverrideConsole />}
       </body>
     </html>
   );
