@@ -15,11 +15,11 @@ const MessageModel = ({ message }: Props) => {
     );
   }
 
-  const content = chunks ? chunks.map(({ text }) => text).join("") : text;
+  const content = chunks ? chunks.map(({ text }) => text).join("").trim() : text;
 
   return (
     <article className="w-full p-4">
-      <p>{content}</p>
+      <p className="whitespace-pre-line">{content}</p>
     </article>
   );
 };
