@@ -2,8 +2,9 @@ import { Button } from "@heroui/react";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { useAvatarStore } from "@/features/avatar";
 import { useVoiceChatStore } from "@/features/voice-chat";
-import { toast, Tooltip } from "@/shared/ui";
+import { Tooltip, toast } from "@/shared/ui";
 
 interface Props {
   onClose: () => void;
@@ -37,6 +38,7 @@ const ButtonClose = ({ onClose, onDisconnect }: Props) => {
           onDisconnect();
           setIsActive(false);
           onClose();
+          useAvatarStore.getState().cancelVisemeAnimation();
         }}
       >
         <X size={28} />

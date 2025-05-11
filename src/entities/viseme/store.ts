@@ -6,8 +6,14 @@ interface VisemeState {
   queue: Queue<Viseme>;
 }
 
-type VisemeStore = VisemeState;
+interface VisemeAction {
+  clear: () => void;
+}
 
-export const useVisemeStore = create<VisemeStore>(() => ({
+type VisemeStore = VisemeState & VisemeAction;
+
+export const useVisemeStore = create<VisemeStore>((set) => ({
   queue: new Queue<Viseme>(),
+
+  clear: () => set({ queue: new Queue<Viseme>() }),
 }));

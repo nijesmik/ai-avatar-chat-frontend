@@ -1,5 +1,9 @@
+import gsap from "gsap";
 import type { Object3D } from "three";
 import { create } from "zustand";
+
+import { useVisemeStore } from "@/entities/viseme";
+import { cancelAnimation } from "@/shared/lib";
 
 import { getAvatar } from "./lib/avatar";
 
@@ -19,6 +23,7 @@ interface AvatarAction {
   setVisemeAnimationRef: (ref: RefObject<number>) => void;
   setAvatar: (avatar: SkinnedMesh) => void;
   setVoiceMale: (voiceMale: VoiceMale) => void;
+  cancelVisemeAnimation: () => void;
 }
 
 type AvatarStore = AvatarState & AvatarAction;
@@ -27,7 +32,7 @@ export const useAvatarStore = create<AvatarStore>((set, get) => ({
   defaultModelMale: null,
   defaultModelFemale: null,
   gender: "male",
-  voiceMale: 'InJoon',
+  voiceMale: "InJoon",
 
   avatar: null,
   visemeAnimationRef: null,
@@ -58,4 +63,18 @@ export const useAvatarStore = create<AvatarStore>((set, get) => ({
   setAvatar: (avatar) => set({ avatar }),
 
   setVoiceMale: (voiceMale) => set({ voiceMale }),
+
+  cancelVisemeAnimation: () => {
+    const { avatar, visemeAnimationRef } = get();
+    if (!avatar || !visemeAnimationRef) {
+      return;
+    }
+    cancelAnimation(visemeAnimationRef);
+    const influences = avatar.morphTargetInfluences;
+    gsap.globalTimeline.clear();
+    for (let i = 0; i < influences.length; i++) {
+      influences[i] = 0;
+    }
+    useVisemeStore.getState().clear();
+  },
 }));
