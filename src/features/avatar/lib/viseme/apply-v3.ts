@@ -9,15 +9,17 @@ const calculateDuration = (
   previous: VisemeStrict | undefined,
   current: VisemeStrict,
 ) => {
-  if (!previous || previous.audio_offset < DEFAULT_DURATION.fall) {
+  const fall = current.audio_offset < 500 ? 80 : 100;
+
+  if (!previous || previous.audio_offset < fall) {
     return [current.audio_offset, 0];
   }
   const gap = current.audio_offset - previous.audio_offset;
-  const hold = gap - DEFAULT_DURATION.fall;
+  const hold = gap - fall;
   if (hold > DEFAULT_DURATION.hold) {
-    return [DEFAULT_DURATION.fall, 1];
+    return [fall, 1];
   }
-  return [DEFAULT_DURATION.fall, 0];
+  return [fall, 0];
 };
 
 const applyVisemeFadeOut = (
